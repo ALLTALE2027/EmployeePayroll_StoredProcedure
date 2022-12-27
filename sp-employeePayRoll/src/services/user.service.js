@@ -28,6 +28,8 @@ export const login = async (body) => {
       email: body.email
     }
   });
+  console.log(data);
+
   if (data !== null) {
     const result = await bcrypt.compare(body.password, data[0].Password);
     if (result) {
@@ -35,7 +37,12 @@ export const login = async (body) => {
         { email: data[0].Email, id: data[0].id },
         process.env.SECRET_KEY
       );
-      return token;
+      return {
+        token,
+        error_status: data[0].error_status,
+        message: data[0].message,
+        statusCode: data[0].statusCode
+      };
     } else {
       throw Error('Invalid credentials');
     }

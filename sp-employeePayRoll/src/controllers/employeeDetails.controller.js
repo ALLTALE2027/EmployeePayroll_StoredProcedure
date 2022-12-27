@@ -13,14 +13,15 @@ export const newEmployee = async (req, res, next) => {
       req.body,
       req.body.userEmail
     );
-    res.status(HttpStatus.CREATED).json({
-      code: HttpStatus.CREATED,
-      data: data,
-      message: 'Employee details added successfully'
+    res.status(data[0].statusCode).json({
+      code: data[0].statusCode,
+      success: data[0].error_status == 1 ? false : true,
+      message: data[0].message
     });
   } catch (error) {
-    res.status(HttpStatus.BAD_REQUEST).json({
-      code: HttpStatus.BAD_REQUEST,
+    res.status(data[0].statusCode).json({
+      code: data[0].statusCode,
+      success: data[0].error_status == 1 ? false : true,
       message: `${error}`
     });
   }
@@ -34,15 +35,18 @@ export const newEmployee = async (req, res, next) => {
  */
 export const getEmployees = async (req, res, next) => {
   try {
-    const data = await EmployeeService.getEmployees();
-    res.status(HttpStatus.OK).json({
-      code: HttpStatus.OK,
-      data: data,
-      message: 'Employee details fetched successfully'
+    const data = await EmployeeService.getEmployees2(req.body);
+    const { error_status, message, statusCode, employeeDetails } = data;
+    res.status(statusCode).json({
+      code: statusCode,
+      success: error_status == 1 ? false : true,
+      data: employeeDetails,
+      message: message
     });
   } catch (error) {
-    res.status(HttpStatus.BAD_REQUEST).json({
-      code: HttpStatus.BAD_REQUEST,
+    res.status(statusCode).json({
+      code: statusCode,
+      success: error_status == 1 ? false : true,
       message: `${error}`
     });
   }
@@ -61,14 +65,15 @@ export const updateEmployee = async (req, res, next) => {
       req.body.userEmail,
       req.params.empId
     );
-    res.status(HttpStatus.CREATED).json({
-      code: HttpStatus.CREATED,
-      data: data,
-      message: 'Employee details updated successfully'
+    res.status(data[0].statusCode).json({
+      code: data[0].statusCode,
+      success: data[0].error_status == 1 ? false : true,
+      message: data[0].message
     });
   } catch (error) {
-    res.status(HttpStatus.BAD_REQUEST).json({
-      code: HttpStatus.BAD_REQUEST,
+    res.status(data[0].statusCode).json({
+      code: data[0].statusCode,
+      success: data[0].error_status == 1 ? false : true,
       message: `${error}`
     });
   }
@@ -83,14 +88,14 @@ export const updateEmployee = async (req, res, next) => {
 export const deleteEmployee = async (req, res, next) => {
   try {
     const data = await EmployeeService.deleteEmployee(req.params.empId);
-    res.status(HttpStatus.CREATED).json({
-      code: HttpStatus.CREATED,
-      data: data,
-      message: 'Employee details deleted successfully'
+    res.status(data[0].statusCode).json({
+      code: data[0].statusCode,
+      success: data[0].error_status == 1 ? false : true,
+      message: data[0].message
     });
   } catch (error) {
-    res.status(HttpStatus.BAD_REQUEST).json({
-      code: HttpStatus.BAD_REQUEST,
+    res.status(data[0].statusCode).json({
+      code: data[0].statusCode,
       message: `${error}`
     });
   }
